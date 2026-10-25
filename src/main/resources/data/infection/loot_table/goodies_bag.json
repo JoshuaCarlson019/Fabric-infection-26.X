@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:gift_bag",
+  "pools": [
+    {
+      "rolls": 3,
+      "entries": [
+        {
+          "type": "minecraft:item", "name": "minecraft:diamond", "weight": 1
+        },
+        {
+          "type": "minecraft:item", "name": "minecraft:golden_apple", "weight": 3,
+          "functions": [{ "function": "minecraft:set_count", "count": 2}]
+        },
+        {
+          "type": "minecraft:item", "name": "minecraft:cookie", "weight": 10,
+          "functions": [{ "function": "minecraft:set_count", "count": 8}]
+        },
+        {
+          "type": "minecraft:item", "name": "minecraft:experience_bottle", "weight": 5,
+          "functions": [{ "function": "minecraft:set_count", "count": 3}]
+        }
+      ]
+    }
+  ]
+}

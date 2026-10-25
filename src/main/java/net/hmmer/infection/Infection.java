@@ -2,26 +2,24 @@ package net.hmmer.infection;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.minecraft.resources.Identifier;
+import net.hmmer.infection.creativemodtabs.ModCreativeModeTabs;
+import net.hmmer.infection.items.ModItems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Infection implements ModInitializer {
+    // Mod ID
 	public static final String MOD_ID = "infection";
-
+    // To log what each thing does
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+        // registers creative mode tabs, have this at the top
+        ModCreativeModeTabs.registerCreativeTabs();
 
-		LOGGER.info("Hello Fabric world!");
-	}
-
-	public static Identifier id(String path) {
-		return Identifier.fromNamespaceAndPath(MOD_ID, path);
+        // registers items
+        ModItems.registerItems();
 	}
 }
