@@ -1,6 +1,7 @@
 package net.hmmer.infection.items.custom;
 
 import net.hmmer.infection.Infection;
+import net.hmmer.infection.particles.ModParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -55,6 +56,12 @@ public class OpenBagItem extends Item {
 
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 0.5F, 1.0F);
+
+            serverLevel.sendParticles(ModParticles.CANDY_CORN,
+                    player.getX(), player.getY() + 1.0, player.getZ(),
+                    10,
+                    0, 0, 0,
+                    1);
 
             player.awardStat(Stats.ITEM_USED.get(this));
             bag.consume(1, player); // removes one bag (doesn't consume in creative mode)

@@ -21,4 +21,5 @@ public class ModelProvider extends FabricModelProvider {
     public void generateItemModels(ItemModelGenerators itemModelGenerators) {
         itemModelGenerators.generateFlatItem(ModItems.goodiesBag, ModelTemplates.FLAT_ITEM);
     }
+
 }

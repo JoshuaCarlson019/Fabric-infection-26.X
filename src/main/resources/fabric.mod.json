@@ -20,7 +20,10 @@
 		],
 		"fabric-datagen": [
 			"net.hmmer.infection.InfectionDataGenerator"
-		]
+		],
+        "client": [
+            "net.hmmer.infection.InfectionClient"
+        ]
 	},
 	"mixins": [
 		"infection.mixins.json"

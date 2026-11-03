@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.hmmer.infection.creativemodtabs.ModCreativeModeTabs;
 import net.hmmer.infection.items.ModItems;
 
+import net.hmmer.infection.particles.ModParticles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,9 @@ public class Infection implements ModInitializer {
 	public void onInitialize() {
         // registers creative mode tabs, have this at the top
         ModCreativeModeTabs.registerCreativeTabs();
+
+        // registers particles
+        ModParticles.registerParticles();
 
         // registers items
         ModItems.registerItems();
