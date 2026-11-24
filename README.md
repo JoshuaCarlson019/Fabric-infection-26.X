@@ -6,4 +6,4 @@ The Infection mod, of sorts
 
 ## License
 
-Mit-License
+Infection © 2026 by TheHmmmmer is licensed under CC BY 4.0
