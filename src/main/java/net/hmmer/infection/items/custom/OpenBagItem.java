@@ -2,7 +2,6 @@ package net.hmmer.infection.items.custom;
 
 import net.hmmer.infection.Infection;
 import net.hmmer.infection.particles.ModParticles;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -10,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -20,8 +20,6 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-
-import java.util.List;
 
 public class OpenBagItem extends Item {
 
@@ -50,7 +48,7 @@ public class OpenBagItem extends Item {
             for (ItemStack reward : table.getRandomItems(params)) {
                 // put item in inventory or drop it at their feet if their inventory is full
                 if (!player.getInventory().add(reward)) {
-                    player.drop(reward, false);
+                    player.drop(reward, false, Prediction.SERVER_ONLY); // server decision
                 }
             }
 

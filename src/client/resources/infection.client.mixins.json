@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "net.hmmer.infection.mixin.client",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "AbstractClientPlayerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
