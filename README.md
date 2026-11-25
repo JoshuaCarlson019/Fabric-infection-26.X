@@ -6,8 +6,13 @@ A mod that lets you run infection games in minecraft
 
 Infection is a game where one person starts off infected and has to kill the other players on the server. For ease of words I'll call the other players survivors. When an infected kills a survivor, that player becomes an infected and also has to hunt down the other players on the server. This repeats until there is none survivors remaining which results in the infected winning.
 
+# Download:
+
+## v0.0.1 
+https://github.com/JoshuaCarlson019/Infection-Mod-for-Java-Minecraft-Version-26.3/releases/download/v0.0.1/infection-0.0.1.jar
+
 # Current Version
-## 0.0.1
+## v0.0.1
 
 Includes Basic Infection or Infection with zombies
 
@@ -97,7 +102,7 @@ You need fabric-api-0.165.0+26.3 on the server in the mods folder along with it 
 
 For this to work on a server everyone who joins needs there mod launcher to have fabric-api-0.165.0+26.3 in the mods folder along with my mod.
 
-# Downloads:
+# Download:
 
 
 
