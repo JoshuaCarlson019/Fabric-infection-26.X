@@ -108,5 +108,6 @@ For this to work on a server everyone who joins needs there mod launcher to have
 
 ## v0.0.1
 
-Similar to v0.0.2 but doesn't have new border properties
-Removed hunger system mechanic
+Similar to v0.0.2 but doesn't have new border properties.
+
+Removed hunger system mechanic.
