@@ -8,14 +8,16 @@ Infection is a game where one person starts off infected and has to kill the oth
 
 # Download:
 
+## v0.0.2
+https://github.com/JoshuaCarlson019/Infection-Mod-for-Java-Minecraft-Version-26.3/releases/download/v0.0.2/infection-0.0.2.jar
+
 ## v0.0.1 
 https://github.com/JoshuaCarlson019/Infection-Mod-for-Java-Minecraft-Version-26.3/releases/download/v0.0.1/infection-0.0.1.jar
 
 # Current Version
-## v0.0.1
+## v0.0.2
 
 Includes Basic Infection or Infection with zombies
-
 ## Types
 
 ### Basic infection 
@@ -101,3 +103,10 @@ You need fabric-api-0.165.0+26.3 on the server in the mods folder along with it 
 ## Client-side:
 
 For this to work on a server everyone who joins needs there mod launcher to have fabric-api-0.165.0+26.3 in the mods folder along with my mod.
+
+# Previous versions
+
+## v0.0.1
+
+Similar to v0.0.2 but doesn't have new border properties
+Removed hunger system mechanic
