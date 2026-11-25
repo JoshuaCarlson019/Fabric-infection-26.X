@@ -157,14 +157,12 @@ public class Infection implements ModInitializer {
             InfectionGame.onPlayerJoin(server, handler.player);
         });
 
-        ServerPlayConnectionEvents.DISCONNECT.register((handler,server) -> {
-            InfectionGame.onPlayerLeave(server, handler.player);
-        });
+        ServerPlayConnectionEvents.DISCONNECT.register((handler,server) ->
+                InfectionGame.onPlayerLeave(server, handler.player));
 
         // Makes sure this game doesn't occur in other worlds
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-            InfectionGame.end(server, true);
-        });
+        ServerLifecycleEvents.SERVER_STOPPING.register((server) ->
+                InfectionGame.end(server, true));
 
         ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> {
             String text = message.signedContent();

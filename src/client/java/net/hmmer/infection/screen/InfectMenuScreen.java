@@ -33,7 +33,6 @@ public class InfectMenuScreen extends InfectionScreen {
     private StringWidget coordinateText;
     private Button start;
     private Button cancel;
-    private BorderSizeSlider slider;
     private Button selectedButton = null;
     private PlayerInfo selectedPlayer = null;
 
@@ -218,7 +217,6 @@ public class InfectMenuScreen extends InfectionScreen {
     }
 
     private BlockPos readCoords() {
-        int centerX = this.width / 2;
         try {
             int x = Integer.parseInt(xBox.getValue());
             int y = Integer.parseInt(yBox.getValue());

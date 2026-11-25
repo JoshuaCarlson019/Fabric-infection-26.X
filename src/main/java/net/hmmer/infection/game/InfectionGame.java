@@ -20,7 +20,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -50,8 +49,6 @@ public class InfectionGame {
 
     // Everyone infected this round, by UUID, so it survives relogs
     private static final Set<UUID> infectedPlayers = new HashSet<>();
-    // Everyone notInfected with tick attacked to them this round, by UUID, so it survives relogs
-    private static final Map<UUID, Long> lastHitTick = new HashMap<>();
 
     private static final Map<UUID, Map<EquipmentSlot, ItemStack>> deathGear = new HashMap<>();
 
@@ -177,19 +174,13 @@ public class InfectionGame {
             player.setGameMode(GameType.ADVENTURE);
         }
 
-        // Hunger starts
-        long now = server.getTickCount();
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            lastHitTick.put(player.getUUID(), now);
-        }
-
         // Count Down Sequence, counts down to the start of the game
         infectionCountDownSequence(server, infectedPlayer);
     }
 
     /**
      * infectionCountDown Sequence
-     * @param server the minecraft server we are on
+     * @param server the Minecraft server we are on
      * @param target the server player who was chosen as infected
      */
     private static void infectionCountDownSequence(MinecraftServer server, ServerPlayer target) {
@@ -212,22 +203,12 @@ public class InfectionGame {
 
         // Wait 15 seconds for the game to begin (100 ticks is 5 seconds)
         // then count down to 0 for 5 seconds
-        TaskScheduler.schedule(server, 200, () -> {
-            TitleHelper.sendOutTitle(server, Component.literal("5"));
-        });
+        TaskScheduler.schedule(server, 200, () -> TitleHelper.sendOutTitle(server, Component.literal("5")));
 
-        TaskScheduler.schedule(server, 220, () -> {
-            TitleHelper.sendOutTitle(server, Component.literal("4"));
-        });
-        TaskScheduler.schedule(server, 240, () -> {
-            TitleHelper.sendOutTitle(server, Component.literal("3"));
-        });
-        TaskScheduler.schedule(server, 260, () -> {
-            TitleHelper.sendOutTitle(server, Component.literal("2"));
-        });
-        TaskScheduler.schedule(server, 280, () -> {
-            TitleHelper.sendOutTitle(server, Component.literal("1"));
-        });
+        TaskScheduler.schedule(server, 220, () -> TitleHelper.sendOutTitle(server, Component.literal("4")));
+        TaskScheduler.schedule(server, 240, () -> TitleHelper.sendOutTitle(server, Component.literal("3")));
+        TaskScheduler.schedule(server, 260, () -> TitleHelper.sendOutTitle(server, Component.literal("2")));
+        TaskScheduler.schedule(server, 280, () -> TitleHelper.sendOutTitle(server, Component.literal("1")));
         TaskScheduler.schedule(server, 300, () -> {
 
             countDown = false;
@@ -243,14 +224,11 @@ public class InfectionGame {
 
     /**
      * infect
-     * @param server the minecraft server the player is on
+     * @param server the Minecraft server the player is on
      * @param player the player to infect
      */
     public static void infect(MinecraftServer server, ServerPlayer player) {
         if (!active || isInfected(player)) return; // checks if the player already not infected
-        // Remove hunger
-        lastHitTick.remove(player.getUUID());
-        player.removeEffect(MobEffects.HUNGER);
 
         infectedPlayers.add(player.getUUID());
         InfectionHelper.setInfected(player, true);
@@ -259,7 +237,7 @@ public class InfectionGame {
 
     /**
      * onPlayerDeath
-     * @param server the minecraft server the player is on
+     * @param server the Minecraft server the player is on
      * @param player the player who died
      * @param source the damage source
      */
@@ -322,7 +300,7 @@ public class InfectionGame {
 
     /**
      * onPlayerJoin
-     * @param server the minecraft server
+     * @param server the Minecraft server
      * @param player the player who joined
      */
     public static void onPlayerJoin(MinecraftServer server, ServerPlayer player) {
@@ -343,7 +321,7 @@ public class InfectionGame {
 
     /**
      * onPlayerLeave
-     * @param server the minecraft server
+     * @param server the Minecraft server
      * @param leavingPlayer the player who is leaving
      */
     public static void onPlayerLeave(MinecraftServer server, ServerPlayer leavingPlayer) {
@@ -352,7 +330,7 @@ public class InfectionGame {
 
     /**
      * checkForEnd
-     * @param server the minecraft server
+     * @param server the Minecraft server
      * @param leavingPlayer the player who left
      */
     public static void checkForEnd(MinecraftServer server, ServerPlayer leavingPlayer) {
@@ -404,7 +382,7 @@ public class InfectionGame {
 
     /**
      * end, ends the game
-     * @param server the minecraft server
+     * @param server the Minecraft server
      * @param forceStopYesOrNo if the game was force stopped or not, for example a player uses
      * /infection stop
      */
@@ -418,12 +396,6 @@ public class InfectionGame {
         } else {
             TitleHelper.sendOutSubTitle(server, Component.empty());
             TitleHelper.sendOutTitle(server, Component.literal("Infected have won").withStyle(ChatFormatting.GREEN));
-        }
-
-        // Clears hunger
-        lastHitTick.clear();
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            player.removeEffect(MobEffects.HUNGER);
         }
 
         // Clear zombie mode
@@ -472,7 +444,7 @@ public class InfectionGame {
 
     /**
      * setWorldSpawn, sets the world spawn
-     * @param server the minecraft server
+     * @param server the Minecraft server
      * @param pos the block position where the world border will be set
      */
     private static void setWorldSpawn(MinecraftServer server, BlockPos pos) {
@@ -483,7 +455,7 @@ public class InfectionGame {
 
     /**
      * deInfectAll
-     * @param server minecraft server
+     * @param server Minecraft server
      */
     public static void deInfectAll(MinecraftServer server) {
         InfectionHelper.resetInfectionForAllPlayers(server);
@@ -505,7 +477,7 @@ public class InfectionGame {
 
     /**
      * getInfectedPlayers
-     * @param server the minecraft server
+     * @param server the Minecraft server
      * @return a list of server players
      */
     public static List<ServerPlayer> getInfectedPlayers(MinecraftServer server) {
@@ -516,8 +488,8 @@ public class InfectionGame {
 
     /**
      * anyoneDead, checks if any player is in the death menu screen
-     * @param server the minecraft server
-     * @return returns a list of players who are on the minecraft death screen
+     * @param server the Minecraft server
+     * @return returns a list of players who are on the Minecraft death screen
      */
     public static boolean anyoneDead(MinecraftServer server) {
         return server.getPlayerList().getPlayers().stream().anyMatch(ServerPlayer::isDeadOrDying);
