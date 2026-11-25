@@ -9,10 +9,10 @@ Infection is a game where one person starts off infected and has to kill the oth
 # Download:
 
 ## v0.0.2
-https://github.com/JoshuaCarlson019/Infection-Mod-for-Java-Minecraft-Version-26.3/releases/download/v0.0.2/infection-0.0.2.jar
+[Download v0.0.2 Infection Mod](https://github.com/JoshuaCarlson019/Infection-Mod-for-Java-Minecraft-Version-26.3/releases/download/v0.0.2/infection-0.0.2.jar)
 
 ## v0.0.1 
-https://github.com/JoshuaCarlson019/Infection-Mod-for-Java-Minecraft-Version-26.3/releases/download/v0.0.1/infection-0.0.1.jar
+[Download v0.0.1 Infection Mod](https://github.com/JoshuaCarlson019/Infection-Mod-for-Java-Minecraft-Version-26.3/releases/download/v0.0.1/infection-0.0.1.jar)
 
 # Current Version
 ## v0.0.2
