@@ -17,7 +17,8 @@ public class BorderSizeSlider extends AbstractSliderButton {
 
     // Border size → 0..1
     private static double toSliderValue(double size) {
-        return Mth.clamp((size - BorderSettings.MIN_SIZE) / (BorderSettings.MAX_SIZE - BorderSettings.MIN_SIZE), 0.0, 1.0);
+        return Mth.clamp((size - BorderSettings.MIN_SIZE) /
+                (BorderSettings.MAX_SIZE - BorderSettings.MIN_SIZE), 0.0, 1.0);
     }
 
     // 0..1 → border size, rounded to the nearest STEP

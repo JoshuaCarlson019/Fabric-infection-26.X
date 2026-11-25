@@ -9,6 +9,14 @@ import net.minecraft.network.chat.Component;
 
 public abstract class InfectionScreen extends Screen {
 
+    protected static final int VERTICAL_SPACING = 4; // Vertical Spacing between ui elements
+    protected static final int BUTTON_WIDTH = 100;
+    protected static final int BUTTON_HEIGHT = 20;
+    protected static final int SPACING = 24;
+    protected static final int BOX_WIDTH = 65;
+    protected static final int BOX_HEIGHT = 20;
+    protected final int TEXT_HEIGHT = 12;
+
     protected InfectionScreen(Component title) {
         super(title);
     }
@@ -71,6 +79,26 @@ public abstract class InfectionScreen extends Screen {
     }
 
     /**
+     * Creates an editBox which can be edited Centered
+     * @param label this what the editBox will be named
+     * @param y the vertical position
+     * @param startValue this is the initial value the editBox will start with
+     * @return this EditBox
+     */
+    protected EditBox addEditBox(String label, int y, int width, int startValue) {
+        EditBox box = new EditBox(this.font, getCenterX(this.width, width), y, width, 20, Component.literal(label));
+        box.setMaxLength(2);
+        box.setValue(String.valueOf(startValue));
+        box.setHint(Component.literal(label).withStyle(ChatFormatting.DARK_GRAY));
+        box.setResponder(text -> {
+            String cleaned =
+                    text.replaceAll("[^0-9-]", ""); // remove anything that isn't numbers
+            if (!cleaned.equals(text)) box.setValue(cleaned);
+        });
+        return this.addRenderableWidget(box);
+    }
+
+    /**
      * Creates a new BorderSizeSlider which is a slider for the border size
      * @param x the horizontal position
      * @param y the vertical position
@@ -98,6 +126,36 @@ public abstract class InfectionScreen extends Screen {
         return this.addRenderableWidget(
                 new BorderSizeSlider(getCenterX(this.width, sliderWidth),
                 y, sliderWidth, sliderHeight, startingValue));
+    }
+
+    /**
+     * Creates a new BorderShrinkSizeSlider which is a slider for the border size
+     * @param x the horizontal position
+     * @param y the vertical position
+     * @param sliderWidth width of the slider
+     * @param sliderHeight height of the slider
+     * @param startingValue initial value the slider starts at, typically 500
+     * @return the new slider widget
+     */
+    protected BorderShrinkSizeSlider addBorderShrinkSizeSlider(int x,int y, int sliderWidth,
+                                                   int sliderHeight, int startingValue) {
+        return this.addRenderableWidget(new BorderShrinkSizeSlider(x, y, sliderWidth,
+                sliderHeight, startingValue));
+    }
+
+    /**
+     * Creates a new BorderShrinkSizeSlider which is a slider for the border size, centered
+     * @param y the vertical position
+     * @param sliderWidth width of the slider
+     * @param sliderHeight height of the slider
+     * @param startingValue initial value the slider starts at, typically 500
+     * @return the new slider widget
+     */
+    protected BorderShrinkSizeSlider addBorderShrinkSizeSlider(int y, int sliderWidth,
+                                                   int sliderHeight, int startingValue) {
+        return this.addRenderableWidget(
+                new BorderShrinkSizeSlider(getCenterX(this.width, sliderWidth),
+                        y, sliderWidth, sliderHeight, startingValue));
     }
 
     /**

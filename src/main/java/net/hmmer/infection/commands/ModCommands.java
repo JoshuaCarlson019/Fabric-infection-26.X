@@ -3,6 +3,8 @@ package net.hmmer.infection.commands;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.hmmer.infection.Infection;
+import net.hmmer.infection.border.BorderRecord;
+import net.hmmer.infection.border.BorderSettings;
 import net.hmmer.infection.game.InfectionGame;
 import net.hmmer.infection.network.OpenMenuPayload;
 import net.minecraft.ChatFormatting;
@@ -14,11 +16,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.permissions.Permissions;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ModCommands {
+    private static final BorderRecord borderStuff = new BorderRecord(BorderSettings.INITIAL_BORDER_SIZE,
+            BorderSettings.INITIAL_BORDER_SHRINK_SIZE, BorderSettings.INITIAL_BORDER_TIME_TILL,
+            BorderSettings.INITIAL_BORDER_TIME_TO_SHRINK);
+
     public static void registerCommands() {
         Infection.LOGGER.info("Registering commands for " + Infection.MOD_ID);
 
@@ -102,7 +109,8 @@ public class ModCommands {
 
                                 InfectionGame.startInfection(source.getPlayer(), source.getServer(),
                                         randomPlayer(source), getPosition(source),
-                                        500, source.getLevel(), false);
+                                        borderStuff,
+                                        source.getLevel(), false);
                                 return 1;
                             })
                             .then(Commands.argument("player", EntityArgument.player())
@@ -111,7 +119,8 @@ public class ModCommands {
 
                                         InfectionGame.startInfection(source.getPlayer() ,source.getServer(),
                                                 EntityArgument.getPlayer(context, "player"),
-                                                getPosition(source), 500,
+                                                getPosition(source),
+                                                borderStuff,
                                                 source.getLevel(), false);
                                         return 1;
                                     })
@@ -121,7 +130,8 @@ public class ModCommands {
 
                                             InfectionGame.startInfection(source.getPlayer(), source.getServer(),
                                                     randomPlayer(source), getPosition(source),
-                                                    500, source.getLevel(), true);
+                                                    borderStuff,
+                                                    source.getLevel(), true);
                                             return 1;
                                         }))))
                     .then(Commands.literal("stop")

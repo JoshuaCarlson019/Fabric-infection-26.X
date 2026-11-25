@@ -1,6 +1,7 @@
 package net.hmmer.infection.network;
 
 import net.hmmer.infection.Infection;
+import net.hmmer.infection.border.BorderRecord;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -11,7 +12,15 @@ import net.minecraft.resources.Identifier;
 
 import java.util.UUID;
 
-public record InfectPlayerPayload(UUID target, BlockPos borderPos, int borderSize, boolean zombies) implements CustomPacketPayload {
+/**
+ * InfectPlayerPayload
+ * @param target the player who is infected
+ * @param pos location the game takes place at
+ * @param borderStuff a record that stores stuff about the border
+ * @param zombies If zombieMode is enabled or not
+ */
+public record InfectPlayerPayload(UUID target, BlockPos pos, BorderRecord borderStuff,
+                                  boolean zombies) implements CustomPacketPayload {
 
     public static final Type<InfectPlayerPayload> TYPE =
             new Type<>(Identifier.fromNamespaceAndPath(Infection.MOD_ID, "infect_player"));
@@ -20,8 +29,8 @@ public record InfectPlayerPayload(UUID target, BlockPos borderPos, int borderSiz
     public static final StreamCodec<RegistryFriendlyByteBuf, InfectPlayerPayload> CODEC =
         StreamCodec.composite(
                 UUIDUtil.STREAM_CODEC, InfectPlayerPayload::target,
-                BlockPos.STREAM_CODEC, InfectPlayerPayload::borderPos,
-                ByteBufCodecs.VAR_INT, InfectPlayerPayload::borderSize,
+                BlockPos.STREAM_CODEC, InfectPlayerPayload::pos,
+                BorderRecord.STREAM_CODEC, InfectPlayerPayload::borderStuff,
                 ByteBufCodecs.BOOL, InfectPlayerPayload::zombies,
                 InfectPlayerPayload::new);
 

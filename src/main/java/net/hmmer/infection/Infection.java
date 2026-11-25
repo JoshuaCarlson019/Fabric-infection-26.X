@@ -101,8 +101,8 @@ public class Infection implements ModInitializer {
                 return;
             }
 
-            // Adjusting the Border
-            BlockPos pos = payload.borderPos();
+            // Check inbounds
+            BlockPos pos = payload.pos();
             ServerLevel serverLevel = target.level();
             // Checks that the coords given are in the bounds of the world
             if (!serverLevel.isInWorldBounds(pos)) {
@@ -111,7 +111,7 @@ public class Infection implements ModInitializer {
             }
 
             // starts the game!
-            InfectionGame.startInfection(sender ,server, target, pos, payload.borderSize(), serverLevel, payload.zombies());
+            InfectionGame.startInfection(sender ,server, target, pos, payload.borderStuff(), serverLevel, payload.zombies());
         });
 
         //=======================================================
@@ -119,21 +119,10 @@ public class Infection implements ModInitializer {
 
         ServerLivingEntityEvents.AFTER_DAMAGE.register(((entity, source, baseDamageTaken,
                                                          damageTaken, blocked) -> {
-            if (blocked) return;
-            if(entity instanceof ServerPlayer victim && source.getEntity() instanceof ServerPlayer attacker) {
-                InfectionGame.onPlayerHit(attacker, victim);
-            }
-        }));
-
-        ServerLivingEntityEvents.AFTER_DAMAGE.register(((entity, source, baseDamageTaken,
-                                                         damageTaken, blocked) -> {
             if (entity instanceof ServerPlayer player && InfectionGame.isActive() && !InfectionGame.isInfected(player)) {
                 InfectionGame.rememberGearFor(player);   // keep a fresh copy of their gear
             }
         }));
-
-        // so that InfectionGame.tick runs in the InfectionGame for the hunger system
-        ServerTickEvents.END_SERVER_TICK.register(InfectionGame::tick);
 
         ServerLivingEntityEvents.AFTER_DEATH.register(((entity, damageSource) -> {
 

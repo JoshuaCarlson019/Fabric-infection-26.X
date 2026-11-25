@@ -1,8 +1,9 @@
 package net.hmmer.infection.screen;
 
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.hmmer.infection.border.BorderRecord;
+import net.hmmer.infection.border.BorderSettings;
 import net.hmmer.infection.network.InfectPlayerPayload;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -12,19 +13,20 @@ import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
+
 
 public class InfectMenuScreen extends InfectionScreen {
 
-    private static final int BUTTON_WIDTH = 150;
-    private static final int BUTTON_HEIGHT = 20;
-    private static final int SPACING = 24;
-    private static final int BOX_WIDTH = 65;
-    private static final int BOX_HEIGHT = 20;
-    private final int TEXT_HEIGHT = 12;
-    private static final int VERTICAL_SPACING = 4;
+    public static int borderSize = BorderSettings.INITIAL_BORDER_SIZE;
+    public static int borderShrinkSize = BorderSettings.INITIAL_BORDER_SHRINK_SIZE;
+    public static int timeTill = BorderSettings.INITIAL_BORDER_TIME_TILL;
+    public static int time = BorderSettings.INITIAL_BORDER_TIME_TO_SHRINK;
+
     private static int CURRENT_Y; // Starting Y position
 
     private EditBox xBox, yBox, zBox;
@@ -33,20 +35,28 @@ public class InfectMenuScreen extends InfectionScreen {
     private Button cancel;
     private BorderSizeSlider slider;
     private Button selectedButton = null;
+    private PlayerInfo selectedPlayer = null;
 
-    private Button YesORNoButton = null;
+    private int x,y,z;
+    private boolean initializedXYZ = false;
+
+    private boolean initializedBorderMenu = false;
+
+    private Button enableZombies = null;
 
     private UUID playerInfo = null;
     private boolean zombies = false; // false by default, for zombie mode
 
     public InfectMenuScreen() {
         super(Component.literal("Choose who to infect?"));
-        CURRENT_Y = 10;
+        CURRENT_Y = 4;
     }
 
     @Override
     protected void init() {
-        if (this.minecraft.getConnection() == null || this.minecraft.player == null) return;
+        if (this.minecraft.getConnection() == null || this.minecraft.player == null) return; // check player
+        CURRENT_Y = 4; // resets screen start height
+
         int centerX = this.width / 2;
 
         addText("Start Infection", CURRENT_Y, ChatFormatting.GREEN);
@@ -59,49 +69,60 @@ public class InfectMenuScreen extends InfectionScreen {
 
         // Coordinates boxes, prefilled with your current position
         BlockPos pos = this.minecraft.player.blockPosition();
+        if (!initializedXYZ) {
+            x = pos.getX();
+            y = pos.getY();
+            z = pos.getZ();
+            initializedXYZ = true;
+        }
+
         int startX = centerX - (BOX_WIDTH * 3 + 8) / 2;
 
-        xBox = addEditBox("X", startX, CURRENT_Y, BOX_WIDTH, pos.getX());
-        yBox = addEditBox("Y", startX + BOX_WIDTH + 4, CURRENT_Y, BOX_WIDTH, pos.getY());
-        zBox = addEditBox("Z", startX + (BOX_WIDTH + 4) * 2, CURRENT_Y, BOX_WIDTH, pos.getZ());
+        xBox = addEditBox("X", startX, CURRENT_Y, BOX_WIDTH, x);
+        yBox = addEditBox("Y", startX + BOX_WIDTH + 4, CURRENT_Y, BOX_WIDTH, y);
+        zBox = addEditBox("Z", startX + (BOX_WIDTH + 4) * 2, CURRENT_Y, BOX_WIDTH, z);
 
         CURRENT_Y += VERTICAL_SPACING + BOX_HEIGHT;
 
-        // Slider for world border size
-        int currentSize = 500; // starting value
-        int sliderWidth = 200;
-        int sliderHeight = 20;
+        // button to access border menu
 
-        slider = addBorderSizeSlider(CURRENT_Y, sliderWidth, sliderHeight, currentSize);
+        addButton("Border options", CURRENT_Y, BUTTON_WIDTH, button -> {
+            x = Integer.parseInt(xBox.getValue());
+            y = Integer.parseInt(yBox.getValue());
+            z = Integer.parseInt(zBox.getValue());
+            if (!initializedBorderMenu) {
+                this.minecraft.setScreenAndShow(new BorderMenuScreen(this, borderSize,
+                        borderShrinkSize, timeTill, time));
+                initializedBorderMenu = true;
+            } else {
+                this.minecraft.setScreenAndShow(new BorderMenuScreen(this, borderSize,
+                        borderShrinkSize, timeTill, time));
+            }
+        });
 
-        CURRENT_Y += sliderHeight + VERTICAL_SPACING;
+        CURRENT_Y += VERTICAL_SPACING + BUTTON_HEIGHT;
 
         // Add text for if you want zombies or not
-        addText("Choose if you want zombie mode or not?",  CURRENT_Y, ChatFormatting.WHITE);
+        addText("Enable zombie mode?",  CURRENT_Y, ChatFormatting.WHITE);
 
         CURRENT_Y += VERTICAL_SPACING + TEXT_HEIGHT;
 
-        int startXButton = centerX - (BUTTON_WIDTH * 2 + 4) / 2;
-
-        addButton("Yes", startXButton, CURRENT_Y, BUTTON_WIDTH, (button) -> {
-            if (YesORNoButton != null) {
-                YesORNoButton.active = true;
+        enableZombies = addButton("Enable?", CURRENT_Y, BUTTON_WIDTH, (button) -> {
+            if (!zombies) {
+                enableZombies.setMessage(Component.literal("Disable?"));
+                zombies = true;
+            } else {
+                enableZombies.setMessage(Component.literal("Enable?"));
+                zombies = false;
             }
-
-            button.active = false;
-            YesORNoButton = button;
-            zombies = true;
         });
 
-        addButton("No", startXButton + 4 + BUTTON_WIDTH, CURRENT_Y, BUTTON_WIDTH, (button) -> {
-            if (YesORNoButton != null) {
-                YesORNoButton.active = true;
-            }
-
-            button.active = false;
-            YesORNoButton = button;
-            zombies = false;
-        });
+        // Resets enableZombies button
+        if (zombies) {
+            enableZombies.setMessage(Component.literal("Disable?"));
+        } else {
+            enableZombies.setMessage(Component.literal("Enable?"));
+        }
 
         CURRENT_Y += VERTICAL_SPACING + BUTTON_HEIGHT;
 
@@ -135,7 +156,8 @@ public class InfectMenuScreen extends InfectionScreen {
                 CURRENT_Y += SPACING;
             }
 
-            addButton(name, xPosition, CURRENT_Y, BUTTON_WIDTH, button -> {
+
+            Button btn = addButton(name, xPosition, CURRENT_Y, BUTTON_WIDTH, button -> {
 
                 // Re-enable the previously selected button
                 if (selectedButton != null) {
@@ -146,8 +168,13 @@ public class InfectMenuScreen extends InfectionScreen {
                 button.active = false;
                 selectedButton = button;
                 playerInfo = info.getProfile().id();
-
+                selectedPlayer = info;
             });
+
+            if (info.equals(selectedPlayer)) {
+                btn.active = false;
+                selectedButton = btn;
+            }
 
             if (countForLoop >= 3) { // Important for something, I forgot, yeah
                 countForLoop = 0;
@@ -176,7 +203,9 @@ public class InfectMenuScreen extends InfectionScreen {
                 playerInfo = random.getProfile().id();
             }
 
-            ClientPlayNetworking.send(new InfectPlayerPayload(playerInfo, positon, slider.getSize(), zombies));
+            ClientPlayNetworking.send(new InfectPlayerPayload(playerInfo, positon,
+                    new BorderRecord(borderSize, borderShrinkSize, timeTill, time)
+                    , zombies));
             this.onClose();
         });
 
