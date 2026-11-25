@@ -2,7 +2,7 @@
 
 ## Setup
 
-The Infection mod, of sorts
+The Infection Mod
 
 ## License
 
