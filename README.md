@@ -101,11 +101,3 @@ You need fabric-api-0.165.0+26.3 on the server in the mods folder along with it 
 ## Client-side:
 
 For this to work on a server everyone who joins needs there mod launcher to have fabric-api-0.165.0+26.3 in the mods folder along with my mod.
-
-# Download:
-
-
-
-## License
-
-Infection © 2026 by TheHmmmmer is licensed under CC BY 4.0
